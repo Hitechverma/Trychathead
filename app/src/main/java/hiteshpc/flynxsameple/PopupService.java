@@ -12,9 +12,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListPopupWindow;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 public class PopupService extends Service {
@@ -61,47 +65,61 @@ public class PopupService extends Service {
                 System.out.println("the helll");
                 openPopup(popupHead);
             }
+
+            private void openPopup(View anchor) {
+                WebView wv = new WebView(getApplicationContext());
+                wv.setVerticalScrollBarEnabled(false);
+                wv.setHorizontalScrollBarEnabled(false);
+                wv.setWebViewClient(new WebViewClient());
+                wv.getSettings().setJavaScriptEnabled(true);
+//                view.addView(wv);
+                wv.loadUrl("http://google.com");
+                windowManager.addView(wv,params);
+            }
         });
-           /*try {
-               popupHead.setOnTouchListener(new View.OnTouchListener() {
+        popupHead.setOnTouchListener(new View.OnTouchListener() {
 
-                   private int initialX;
-                   private int initialY;
-                   private float initialTouchX;
-                   private float initialTouchY;
+            private int initialX;
+            private int initialY;
+            private float initialTouchX;
+            private float initialTouchY;
 
-                   @Override
-                   public boolean onTouch(View v, MotionEvent event) {
-                       switch (event.getAction()) {
-                           case MotionEvent.ACTION_DOWN:
-                               initialX = params.x;
-                               initialY = params.y;
-                               initialTouchX = event.getRawX();
-                               initialTouchY = event.getRawY();
-                               return true;
-                           case MotionEvent.ACTION_UP:
-                               return true;
-                           case MotionEvent.ACTION_MOVE:
-                               params.x = initialX + (int) (event.getRawX() - initialTouchX);
-                               params.y = initialY + (int) (event.getRawY() - initialTouchY);
-                               windowManager.updateViewLayout(popupHead, params);
-                               return true;
-                       }
-                       return false;
-                   }
-               });
-           } catch (Exception e){
-
-           }*/
+            @Override
+            public boolean onTouch(View arg0, MotionEvent arg1) {
+                switch (arg1.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        initialX = params.x;
+                        initialY = params.y;
+                        initialTouchX = arg1.getRawX();
+                        initialTouchY = arg1.getRawY();
+                        return false;
+                    case MotionEvent.ACTION_UP:
+                        return false;
+                    case MotionEvent.ACTION_MOVE:
+                        params.x = initialX + (int) (arg1.getRawX() - initialTouchX);
+                        params.y = initialY + (int) (arg1.getRawY() - initialTouchY);
+                        windowManager.updateViewLayout(popupHead, params);
+                        return false;
+                }
+                return false;
+            }
+        });
 
         }
-
-        private void openPopup(View anchor) {
+        /*private void openPopup(View anchor) {
             try {
-                    Intent intent = new Intent(getApplicationContext(), WebViewActivity.class);
+                WebView wv = new WebView(getApplicationContext());
+                wv.setVerticalScrollBarEnabled(false);
+                wv.setHorizontalScrollBarEnabled(false);
+                wv.setWebViewClient(new WebViewClient());
+                wv.getSettings().setJavaScriptEnabled(true);
+//                view.addView(wv);
+                wv.loadUrl("http://google.com");
+                windowManager.addView(wv,);
+                    *//*Intent intent = new Intent(getApplicationContext(), WebViewActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                    /*Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+                    startActivity(intent);*//*
+                    *//*Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
                     ListPopupWindow popup = new ListPopupWindow(getApplicationContext());
 
                     popup.setAnchorView(anchor);
@@ -112,13 +130,13 @@ public class PopupService extends Service {
                     System.out.println("this is wid " + width + " and this is hif " + height);
                     popup.setWidth((int) (width / 1.1));
                     popup.setHeight((int) (height/1.3));
-                    popup.show();*/
+                    popup.show();*//*
 
             }catch (Exception e){
                 e.printStackTrace();
 
             }
-        }
+        }*/
 
     @Override
     public void onDestroy() {
