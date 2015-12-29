@@ -1,24 +1,16 @@
 package hiteshpc.flynxsameple;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
-import android.graphics.Point;
 import android.os.IBinder;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListPopupWindow;
-import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 public class PopupService extends Service {
@@ -43,7 +35,7 @@ public class PopupService extends Service {
 
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         popupHead = new ImageView(this);
-        popupHead.setImageResource(R.drawable.floating5);
+        popupHead.setImageResource(R.drawable.pophead);
 
         final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
@@ -54,7 +46,7 @@ public class PopupService extends Service {
 
         params.gravity = Gravity.TOP | Gravity.LEFT;
         params.x = 10;
-        params.y = 100;
+        params.y = 30;
 
         windowManager.addView(popupHead, params);
 //        popupHead.setClickable(true);
@@ -63,19 +55,23 @@ public class PopupService extends Service {
             @Override
             public void onClick(View arg0) {
                 System.out.println("the helll");
+                params.gravity = Gravity.TOP | Gravity.RIGHT;
+                params.x = 10;
+                params.y = 30;
+                windowManager.updateViewLayout(popupHead, params);
                 openPopup(popupHead);
             }
 
-            private void openPopup(View anchor) {
+            /*private void openPopup(View anchor) {
                 WebView wv = new WebView(getApplicationContext());
-                wv.setVerticalScrollBarEnabled(false);
-                wv.setHorizontalScrollBarEnabled(false);
+//                wv.setVerticalScrollBarEnabled(false);
+//                wv.setHorizontalScrollBarEnabled(false);
                 wv.setWebViewClient(new WebViewClient());
                 wv.getSettings().setJavaScriptEnabled(true);
 //                view.addView(wv);
                 wv.loadUrl("http://google.com");
                 windowManager.addView(wv,params);
-            }
+            }*/
         });
         popupHead.setOnTouchListener(new View.OnTouchListener() {
 
@@ -106,20 +102,47 @@ public class PopupService extends Service {
         });
 
         }
-        /*private void openPopup(View anchor) {
+        private void openPopup(View anchor) {
             try {
-                WebView wv = new WebView(getApplicationContext());
-                wv.setVerticalScrollBarEnabled(false);
-                wv.setHorizontalScrollBarEnabled(false);
+                final WindowManager.LayoutParams Webparams = new WindowManager.LayoutParams(
+                        WindowManager.LayoutParams.WRAP_CONTENT,
+                        WindowManager.LayoutParams.WRAP_CONTENT,
+                        WindowManager.LayoutParams.TYPE_PHONE,
+                        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                        PixelFormat.TRANSLUCENT);
+
+                Webparams.gravity = Gravity.TOP | Gravity.CENTER;
+                Webparams.x = 10;
+                Webparams.y = 200;
+                Webparams.width =850;
+                Webparams.height = 1500;
+
+
+                final WebView wv = new WebView(getApplicationContext());
+//                wv.setVerticalScrollBarEnabled(false);
+//                wv.setHorizontalScrollBarEnabled(false);
                 wv.setWebViewClient(new WebViewClient());
                 wv.getSettings().setJavaScriptEnabled(true);
+                wv.setFocusable(true);
+                wv.setFocusableInTouchMode(true);
+                wv.requestFocus(wv.FOCUS_DOWN);
 //                view.addView(wv);
                 wv.loadUrl("http://google.com");
-                windowManager.addView(wv,);
-                    *//*Intent intent = new Intent(getApplicationContext(), WebViewActivity.class);
+                windowManager.addView(wv, Webparams);
+                popupHead.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            windowManager.removeView(wv);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                    /*Intent intent = new Intent(getApplicationContext(), WebViewActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);*//*
-                    *//*Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+                    startActivity(intent);
+                    Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
                     ListPopupWindow popup = new ListPopupWindow(getApplicationContext());
 
                     popup.setAnchorView(anchor);
@@ -130,13 +153,13 @@ public class PopupService extends Service {
                     System.out.println("this is wid " + width + " and this is hif " + height);
                     popup.setWidth((int) (width / 1.1));
                     popup.setHeight((int) (height/1.3));
-                    popup.show();*//*
+                    popup.show();*/
 
             }catch (Exception e){
                 e.printStackTrace();
 
             }
-        }*/
+        }
 
     @Override
     public void onDestroy() {
